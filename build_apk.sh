@@ -1,32 +1,24 @@
 #!/bin/bash
+set -e # Faz o script parar se der erro
 
-echo "--------------------------------------------------"
-echo "🔨 [AKAME FORGE V7.4] INICIANDO COMPILAÇÃO..."
-echo "--------------------------------------------------"
-
-# 1. Limpando forjas antigas
+echo "🔨 [AKAME FORGE V7.4] INICIANDO..."
 rm -rf build
 mkdir -p build/gen build/obj build/bin
 
-# 2. Processando Recursos (XML e Manifesto)
-echo "📦 Empacotando XML e Manifesto..."
+# 1. Gerar R.java
+echo "📦 Gerando R.java..."
 aapt package -f -m -J build/gen -M app/src/main/AndroidManifest.xml -S app/src/main/res -I $PREFIX/share/java/android.jar
 
-# 3. Compilando o DNA Java
-echo "🧬 Compilando Sistema Nervoso (Java)..."
+# 2. Compilar Java
+echo "🧬 Compilando Java..."
 ecj -d build/obj -cp $PREFIX/share/java/android.jar app/src/main/java/com/akame/soberana/MainActivity.java build/gen/com/akame/soberana/R.java
 
-# 4. Transformando em DEX (Onde o Android entende)
-echo "⚡ Convertendo para Formato DEX..."
+# 3. DEX
+echo "⚡ Convertendo para DEX..."
 dx --dex --output=build/bin/classes.dex build/obj
 
-# 5. Criando o APK Final
-echo "🏗️ Construindo o APK Soberano..."
+# 4. APK Final
+echo "🏗️ Criando APK..."
 aapt package -f -M app/src/main/AndroidManifest.xml -S app/src/main/res -I $PREFIX/share/java/android.jar -F build/bin/Akame_Soberana_V7.4.apk build/bin
 
-# 6. Finalização
-cd build/bin
-echo "--------------------------------------------------"
-echo "✅ [STATUS]: APK GERADO COM SUCESSO!"
-echo "📂 LOCAL: ~/Akame-Soberana-APK/build/bin/Akame_Soberana_V7.4.apk"
-echo "--------------------------------------------------"
+echo "✅ SUCESSO REAL!"
